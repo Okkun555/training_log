@@ -10,6 +10,10 @@ Rails.application.routes.draw do
       namespace :current do
         resource :user, only: [:show]
       end
+
+      resources :users, only: [] do
+        resources :training_items, only: [:index, :create, :destroy], module: :users
+      end
     end
   end
 end
