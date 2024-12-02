@@ -5,5 +5,5 @@ class User < ActiveRecord::Base
          :recoverable, :rememberable, :validatable, :confirmable
   include DeviseTokenAuth::Concerns::User
 
-  has_many :created_training_items, class_name: "TrainingItem", foreign_key: "user_id", dependent: :destroy
+  has_many :created_training_items, class_name: 'TrainingItem', dependent: :destroy
 end
