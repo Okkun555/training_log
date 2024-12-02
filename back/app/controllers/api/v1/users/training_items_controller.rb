@@ -1,9 +1,7 @@
 class Api::V1::Users::TrainingItemsController < Api::V1::BaseController
-  def index
-    unless correct_user?
-      return render json: { error: '権限がありません' }, status: :forbidden
-    end
+  before_action :check_correct_user
 
+  def index
     user = User.find(params[:user_id])
     render json: user.created_training_items, each_serializer: TrainingItemSerializer
   end
@@ -16,7 +14,9 @@ class Api::V1::Users::TrainingItemsController < Api::V1::BaseController
   end
 
   private
-    def correct_user?
-      current_user.id.to_s == params[:user_id]
+    def check_correct_user
+      unless current_user.id.to_s == params[:user_id]
+        render json: { error: '権限がありません' }, status: :forbidden
+      end
     end
 end
