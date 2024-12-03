@@ -30,4 +30,37 @@ RSpec.describe 'Api::V1::Users::TrainingItems', type: :request do
       end
     end
   end
+
+  describe 'POST /users/{user_id}\training_items' do
+    let(:valid_params) { { training_item: { name: 'ベンチプレス', weight_unit: 'kg' } } }
+
+    context 'ログイン中のユーザーに対してリクエストする時' do
+      it '201ステータスと作成した種目を返却する' do
+        post "/api/v1/users/#{test_user.id}/training_items",
+          params: valid_params,
+          headers: sign_in(test_user)
+
+        expect(response).to have_http_status(:created)
+      end
+
+      it '作成した種目がDBに保存されている' do
+        expect do
+          post "/api/v1/users/#{test_user.id}/training_items",
+            params: valid_params,
+            headers: sign_in(test_user)
+        end.to change(TrainingItem, :count).by(1)
+      end
+    end
+
+    context 'ログイン中のユーザー以外のリソースに対してリクエストする時' do
+      it '403ステータスとエラーメッセージを返却する' do
+        # MEMO:本人以外のIDを設定するため、id - 1を実施
+        post "/api/v1/users/#{test_user.id - 1}/training_items",
+          params: valid_params,
+          headers: sign_in(test_user)
+
+        expect(response).to have_http_status(:forbidden)
+      end
+    end
+  end
 end
