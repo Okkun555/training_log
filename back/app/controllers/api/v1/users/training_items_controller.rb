@@ -8,10 +8,12 @@ class Api::V1::Users::TrainingItemsController < Api::V1::BaseController
 
   def create
     user = User.find(params[:user_id])
-    # TODO: 例外の取り扱いを追加する
-    if user.created_training_items.create!(training_item_params)
-      render status: :created
-    end
+    return unless user.created_training_items.create!(training_item_params)
+
+    render status: :created
+  end
+
+  def update
   end
 
   def destroy
@@ -21,6 +23,7 @@ class Api::V1::Users::TrainingItemsController < Api::V1::BaseController
 
   def check_correct_user
     return if current_user.id.to_s == params[:user_id]
+
     render json: { error: '権限がありません' }, status: :forbidden
   end
 

@@ -37,8 +37,8 @@ RSpec.describe 'Api::V1::Users::TrainingItems', type: :request do
     context 'ログイン中のユーザーに対してリクエストする時' do
       it '201ステータスと作成した種目を返却する' do
         post "/api/v1/users/#{test_user.id}/training_items",
-          params: valid_params,
-          headers: sign_in(test_user)
+             params: valid_params,
+             headers: sign_in(test_user)
 
         expect(response).to have_http_status(:created)
       end
@@ -46,8 +46,8 @@ RSpec.describe 'Api::V1::Users::TrainingItems', type: :request do
       it '作成した種目がDBに保存されている' do
         expect do
           post "/api/v1/users/#{test_user.id}/training_items",
-            params: valid_params,
-            headers: sign_in(test_user)
+               params: valid_params,
+               headers: sign_in(test_user)
         end.to change(TrainingItem, :count).by(1)
       end
     end
@@ -56,8 +56,8 @@ RSpec.describe 'Api::V1::Users::TrainingItems', type: :request do
       it '403ステータスとエラーメッセージを返却する' do
         # MEMO:本人以外のIDを設定するため、id - 1を実施
         post "/api/v1/users/#{test_user.id - 1}/training_items",
-          params: valid_params,
-          headers: sign_in(test_user)
+             params: valid_params,
+             headers: sign_in(test_user)
 
         expect(response).to have_http_status(:forbidden)
       end
