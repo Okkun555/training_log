@@ -12,7 +12,7 @@ Rails.application.routes.draw do
       end
 
       resources :users, only: [] do
-        resources :training_items, only: [:index, :create, :destroy], module: :users
+        resources :training_items, only: [:index, :create, :update, :destroy], module: :users
       end
     end
   end
