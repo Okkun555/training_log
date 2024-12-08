@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe "Api::V1::Current::Users", type: :request do
+RSpec.describe 'Api::V1::Current::Users', type: :request do
   let(:logged_in_user) { FactoryBot.create(:user) }
 
   describe 'GET /current/user' do
