@@ -64,6 +64,36 @@ RSpec.describe 'Api::V1::Users::TrainingItems', type: :request do
     end
   end
 
+  describe 'PUT /users/{user_id}/training_items/{id}' do
+    context 'ログイン中のユーザーに対してリクエストする時' do
+      it '更新対象の種目データが存在しない場合、404ステータスを返却する' do
+        put "/api/v1/users/#{test_user.id}/training_items/0",
+            params: { training_item: { name: 'ベンチプレス', weight_unit: 'kg' } },
+            headers: sign_in(test_user)
+
+        expect(response).to have_http_status(:not_found)
+      end
+
+      it '更新対象の種目データが存在する場合、200ステータスを返却する' do
+        put "/api/v1/users/#{test_user.id}/training_items/#{training_items[0].id}",
+            params: { training_item: { name: 'ベンチプレス', weight_unit: 'kg' } },
+            headers: sign_in(test_user)
+
+        expect(response).to have_http_status(:ok)
+      end
+    end
+
+    context 'ログイン中のユーザー以外のリソースに対してリクエストする時' do
+      it '403ステータスとエラーメッセージを返却する' do
+        # MEMO:本人以外のIDを設定するため、id - 1を実施
+        put "/api/v1/users/#{test_user.id - 1}/training_items/#{training_items[0].id}",
+            headers: sign_in(test_user)
+
+        expect(response).to have_http_status(:forbidden)
+      end
+    end
+  end
+
   describe 'DELETE /users/{user_id}/training_items/{id}' do
     context 'ログイン中のユーザーに対してリクエストする時' do
       it '削除対象の種目データが存在しない場合、404ステータスを返却する' do

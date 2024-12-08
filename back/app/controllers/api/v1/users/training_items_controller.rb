@@ -14,6 +14,14 @@ class Api::V1::Users::TrainingItemsController < Api::V1::BaseController
   end
 
   def update
+    @training_item = current_user.created_training_items.find(params[:id])
+    unless @training_item
+      render status: :not_found
+    end
+
+    if @training_item.update!(training_item_params)
+      render status: :ok
+    end
   end
 
   def destroy
